@@ -45,7 +45,7 @@ const Signup = () => {
                     "Content-type":"application/json",
                 },
             };
-            const {data} = await axios.post('http://localhost:5555/api/user',
+            const {data} = await axios.post('http://65.1.43.9:5555/api/user',
             {name,email,password,pic},
             config
             );

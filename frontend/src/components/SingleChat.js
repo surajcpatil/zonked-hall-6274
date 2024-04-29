@@ -18,7 +18,7 @@ import './style.css'
 import ScrollableChat from "./ScrollableChat";
 import io from 'socket.io-client';
 //https://zonked-hall-6274-8wlvp84ul-srjizhere.vercel.app/
-const ENDPOINT = "http://localhost:5555";
+const ENDPOINT = "http://65.1.43.9:5555";
 var socket,SelectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -44,7 +44,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         }
         setLoading(true)
          const { data } = await axios.get(
-           `http://localhost:5555/api/message/${SelectedChat._id}`,
+           `http://65.1.43.9:5555/api/message/${SelectedChat._id}`,
            config
          );
            
@@ -76,7 +76,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           };
           setNewMessage("");
           const { data } = await axios.post(
-            "http://localhost:5555/api/message",
+            "http://65.1.43.9:5555/api/message",
             {
               content: newMessage,
               chatId: SelectedChat._id,
