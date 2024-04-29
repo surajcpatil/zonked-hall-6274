@@ -45,10 +45,11 @@ const Signup = () => {
                     "Content-type":"application/json",
                 },
             };
-            const {data} = await axios.post('http://localhost:8080/api/user',
+            const {data} = await axios.post('http://localhost:5555/api/user',
             {name,email,password,pic},
             config
             );
+            console.log(data);
                 toast({
                 title:"Regstration Successful",
                 status:"success",
@@ -56,7 +57,7 @@ const Signup = () => {
                 isClosable:true,
                 position:"bottom",
             });
-            localStorage.setItem('userInfo',JSON.stringify(data.data));
+            localStorage.setItem('userInfo',JSON.stringify(data));
             setLoading(false);
             navigate('/chats')
         }catch(error){

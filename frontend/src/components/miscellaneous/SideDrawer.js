@@ -72,7 +72,7 @@ const SideDrawer = () => {
         },
       };
       const { data } = await axios.get(
-        `http://localhost:8080/api/user?search=${search}`,
+        `http://localhost:5555/api/user?search=${search}`,
         config
       );
       setLoading(false);
@@ -99,7 +99,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.post(
-        "http://localhost:8080/api/chat",
+        "http://localhost:5555/api/chat",
         { userId },
         config
       );
