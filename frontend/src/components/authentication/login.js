@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import {useToast} from "@chakra-ui/react";
 import  axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl, API_ENDPOINTS } from '../../config/api';
 
 const Login = () => {
   const [show, setShow] = useState(false)
@@ -29,16 +30,16 @@ const Login = () => {
         }
         try{
             const config = {
-                header:{
+                headers:{
                     'Content-type':"application/json",
                 },
             };
             const {data}  = await axios.post(
-                "http://65.1.43.9:5555/api/user/login",
+                getApiUrl(API_ENDPOINTS.USER_LOGIN),
                 {email,password},
                 config
             );
-            console.log(data,"this is hardcoded")
+            // Login successful
                toast({
                 title:"Login Successfull",
                 status:"success",
@@ -51,7 +52,7 @@ const Login = () => {
             navigate('/chats')
 
         }catch(error){
-            console.log(error);
+            // Error handled by toast notification
                toast({
                 title:"Error Occured",
                 description:"Error Occur While Login",

@@ -8,6 +8,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogics";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
+import { getApiUrl, API_ENDPOINTS } from "../config/api";
 
 const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -15,7 +16,7 @@ const MyChats = ({fetchAgain}) => {
   const toast = useToast();
 
   const fetchChats = async () => {
-    console.log(user)
+    // Fetching chats for user
     try {
       const config = {
         'Content-Type':"application/json",
@@ -24,10 +25,10 @@ const MyChats = ({fetchAgain}) => {
         },
       };
       const { data } = await axios.get(
-        "http://65.1.43.9:5555/api/chat",
+        getApiUrl(API_ENDPOINTS.CHAT_GET_ALL),
         config
       );
-      console.log(data);
+      // Chats loaded successfully
       setChats(data);
     } catch (error) {
       toast({

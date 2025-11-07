@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, useToast, VStack } from '@chakra-ui/react'
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
+import { getApiUrl, API_ENDPOINTS, CLOUDINARY_CONFIG } from '../../config/api'
 //https://api.cloudinary.com/v1_1/dbpt6np2b
 const Signup = () => {
     const [show, setShow] = useState(false)
@@ -45,11 +46,11 @@ const Signup = () => {
                     "Content-type":"application/json",
                 },
             };
-            const {data} = await axios.post('http://65.1.43.9:5555/api/user',
+            const {data} = await axios.post(getApiUrl(API_ENDPOINTS.USER_REGISTER),
             {name,email,password,pic},
             config
             );
-            console.log(data);
+            // Registration successful
                 toast({
                 title:"Regstration Successful",
                 status:"success",
@@ -61,7 +62,7 @@ const Signup = () => {
             setLoading(false);
             navigate('/chats')
         }catch(error){
-            console.log(error);
+            // Error handled by toast notification
                    toast({
                 title:"Error",
                 description:error.response.data.message,
@@ -89,19 +90,19 @@ const Signup = () => {
         if(pics.type==="image/jpeg" || pics.type ==="image/png"){
             const data =  new FormData();
             data.append('file',pics);
-            data.append('upload_preset',"mychat");
-            data.append('Cloud_name',"dbpt6np2b")
-            fetch('https://api.cloudinary.com/v1_1/dbpt6np2b/image/upload',{
+            data.append('upload_preset', CLOUDINARY_CONFIG.UPLOAD_PRESET);
+            data.append('Cloud_name', CLOUDINARY_CONFIG.CLOUD_NAME)
+            fetch(CLOUDINARY_CONFIG.UPLOAD_URL,{
                 method:'post',
                 body:data
             }).then((res)=>res.json())
             .then(data=>{
                 setPic(data.url.toString());
-                console.log(data.url.toString());
+                // Image upload successful
                 setLoading(false);
             })
             .catch(err=>{
-                console.log(err);
+                // Image upload error handled
                 setLoading(false);
             });
         }else{

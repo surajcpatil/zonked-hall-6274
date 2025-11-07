@@ -1,12 +1,12 @@
 export const getSender=(loggedUser,users)=>{
   // console.log(users,loggedUser,"this is got on getsender")
-  console.log(loggedUser._id)
+  // Getting sender info
   // return "63ce31243d8a669d86b62b84"
 return users[0]._id === loggedUser._id ? users[1].name : users[0].name
 }
 
 export const getSenderFull=(loggedUser,users)=>{
-  console.log("getSenderFull visited");
+  // Getting full sender details
 return users[0]._id===loggedUser._id?users[1]:users[0]
 }
 

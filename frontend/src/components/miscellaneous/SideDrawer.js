@@ -28,6 +28,7 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
 import { getSender } from "../../config/ChatLogics";
+import { getApiUrl, API_ENDPOINTS } from "../../config/api";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -72,7 +73,7 @@ const SideDrawer = () => {
         },
       };
       const { data } = await axios.get(
-        `http://65.1.43.9:5555/api/user?search=${search}`,
+        `${getApiUrl(API_ENDPOINTS.USER_SEARCH)}?search=${search}`,
         config
       );
       setLoading(false);
@@ -99,7 +100,7 @@ const SideDrawer = () => {
       };
 
       const { data } = await axios.post(
-        "http://65.1.43.9:5555/api/chat",
+        getApiUrl(API_ENDPOINTS.CHAT_CREATE),
         { userId },
         config
       );

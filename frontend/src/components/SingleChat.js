@@ -17,8 +17,9 @@ import axios from "axios";
 import './style.css'
 import ScrollableChat from "./ScrollableChat";
 import io from 'socket.io-client';
+import { getApiUrl, getSocketUrl, API_ENDPOINTS } from '../config/api';
 //https://zonked-hall-6274-8wlvp84ul-srjizhere.vercel.app/
-const ENDPOINT = "http://65.1.43.9:5555";
+const ENDPOINT = getSocketUrl();
 var socket,SelectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -34,6 +35,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const { user, SelectedChat, setSelectedChat,notification,setNotification } = ChatState();
   const fetchMessages = async ()=>{
     if(!SelectedChat) return;
+    if(!user?.token) {
+      toast({
+        title: "Authentication Error",
+        description: "Please login again",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+      return;
+    }
     try {
          const config = {
           headers: {
@@ -44,18 +56,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         }
         setLoading(true)
          const { data } = await axios.get(
-           `http://65.1.43.9:5555/api/message/${SelectedChat._id}`,
+           getApiUrl(`${API_ENDPOINTS.MESSAGE_GET}/${SelectedChat._id}`),
            config
          );
            
             setmessages(data);
             setLoading(false);
-            socket.emit('joinChat',SelectedChat._id);
+            if(socket) {
+              socket.emit('joinChat',SelectedChat._id);
+            }
         
     } catch (error) {
+           setLoading(false);
            toast({
           title: "Error Occured",
-          description: "failed to load the chats",
+          description: error.response?.data?.message || "Failed to load messages",
           status: "error",
           duration: 4000,
           isClosable: true,
@@ -76,7 +91,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           };
           setNewMessage("");
           const { data } = await axios.post(
-            "http://65.1.43.9:5555/api/message",
+            getApiUrl(API_ENDPOINTS.MESSAGE_SEND),
             {
               content: newMessage,
               chatId: SelectedChat._id,
@@ -98,18 +113,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     };
     useEffect(() => {
-      socket = io(ENDPOINT);
-      socket.emit("setup", user);
+      socket = io(getSocketUrl());
+      if (user) {
+        socket.emit("setup", user);
+      }
       socket.on("connected", () => setSocketConnected(true));
       socket.on("typing", () =>{ 
         setIsTyping(true)
       });
       socket.on("stop typing", () => setIsTyping(false));
-      // eslint-disable-next-line
-    },[]);
+      
+      return () => {
+        socket.disconnect();
+      };
+    }, [user]);
   
-useEffect(()=>{
-},[isTyping])
+// Removed empty useEffect - was causing unnecessary re-renders
   useEffect(() => {
     fetchMessages();
     SelectedChatCompare = SelectedChat;
@@ -128,7 +147,11 @@ useEffect(()=>{
       setmessages([...messages,newMessageRecieved])
     }
    })
-  })
+   
+   return () => {
+     socket.off("message recieved");
+   };
+  }, [SelectedChatCompare, notification, messages, fetchAgain, setFetchAgain, setNotification, setmessages])
   
   
 

@@ -20,6 +20,7 @@ import { ChatState } from "../../context/chatprovider";
 import UserBadgeItem from "../UserAvatar/UserBadgeItem";
 import axios from "axios";
 import UserListItem from "../UserAvatar/UserListItem";
+import { getApiUrl, API_ENDPOINTS } from "../../config/api";
 
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain ,fetchMessages}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +51,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain ,fetchMessages}) => {
         },
     };
     const { data } = await axios.put(
-      "http://65.1.43.9:5555/api/chat/groupremove",
+      getApiUrl(API_ENDPOINTS.CHAT_GROUP_REMOVE_USER),
       {
         chatId: SelectedChat._id,
         userId: user1._id,
@@ -104,7 +105,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain ,fetchMessages}) => {
           Authorization: `Bearer ${user.token}`,
         },
     };
-    const {data} = await axios.put('http://65.1.43.9:5555/api/chat/groupadd',{
+    const {data} = await axios.put(getApiUrl(API_ENDPOINTS.CHAT_GROUP_ADD_USER),{
         chatId:SelectedChat._id,
         userId:user1._id,
     },
@@ -137,7 +138,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain ,fetchMessages}) => {
           Authorization: `Bearer ${user.token}`,
         },
     }
-    const {data} = await axios.put('http://65.1.43.9:5555/api/chat/rename',{
+    const {data} = await axios.put(getApiUrl(API_ENDPOINTS.CHAT_GROUP_UPDATE),{
         chatId:SelectedChat._id,
         chatName:groupChatName,
     },
@@ -172,10 +173,10 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain ,fetchMessages}) => {
           },
         };
         const { data } = await axios.get(
-          `http://65.1.43.9:5555/api/user?search=${search}`,
+          `${getApiUrl(API_ENDPOINTS.USER_SEARCH)}?search=${search}`,
           config
         );
-        console.log(data);
+        // Search results loaded
         setLoading(false);
         setSearchResult(data)
 
