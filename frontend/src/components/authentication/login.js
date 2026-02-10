@@ -1,4 +1,18 @@
-import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack } from '@chakra-ui/react';
+import { 
+  Button, 
+  FormControl, 
+  FormLabel, 
+  Input, 
+  InputGroup, 
+  InputLeftElement,
+  InputRightElement, 
+  VStack,
+  Box,
+  Divider,
+  IconButton,
+  useColorModeValue
+} from '@chakra-ui/react';
+import { EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
 import {useToast} from "@chakra-ui/react";
 import  axios from 'axios';
@@ -66,54 +80,145 @@ const Login = () => {
 
     }
     
-   return <VStack spacing='5px' color='black'>
-    <FormControl id='email' isRequired="true">
-        <FormLabel>Email</FormLabel>
-        <Input
-        placeholder='Enter Your Email'
-        value={email}
-       onChange={(e)=>setEmail(e.target.value)}
-       />
-    </FormControl>
-    <FormControl id='password' isRequired="true">
-        <FormLabel>Password</FormLabel>
-        <InputGroup>
-        <Input
-        type={show? "text":'password'}
-        placeholder='Enter Password'
-        value={password}
-       onChange={(e)=>setPassword(e.target.value)}
-       />
-       <InputRightElement width='4.5rem'>
-        <Button h="1.75rem" size='sm' onClick={handleClick}>
-            {show ? 'Hide':'Show'}
-        </Button>
-       </InputRightElement>
+    const borderColor = useColorModeValue('gray.200', 'gray.600');
+    const inputBg = useColorModeValue('gray.50', 'gray.700');
+    const iconColor = useColorModeValue('blue.500', 'blue.300');
+    
+   return (
+    <Box w="100%">
+      <VStack spacing={6} color='black'>
+        <FormControl id='email' isRequired>
+          <FormLabel 
+            fontSize="sm" 
+            fontWeight="semibold" 
+            color="gray.700"
+            mb={2}
+          >
+            Email Address
+          </FormLabel>
+          <InputGroup>
+            <InputLeftElement 
+              pointerEvents='none' 
+              children={<EmailIcon color={iconColor} />}
+              h="100%"
+              pl={3}
+            />
+            <Input
+              type='email'
+              placeholder='Enter your email'
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
+              bg={inputBg}
+              borderColor={borderColor}
+              _hover={{ borderColor: 'blue.400' }}
+              _focus={{
+                borderColor: 'blue.500',
+                boxShadow: '0 0 0 1px #3182ce'
+              }}
+              pl={10}
+              h="45px"
+              fontSize="md"
+            />
+          </InputGroup>
+        </FormControl>
 
-       </InputGroup>
-    </FormControl>
-    <Button
-    colorScheme='blue'
-    width="100%"
-    style={{marginTop:15}}
-    onClick  = {submitHandler}
-    isLoading={loading}
-    >
-        Login
-    </Button>
-    <Button
-    variant='solid'
-    colorScheme='red'
-    width="100%"
-    onClick = {()=>{
-        setEmail('guest@example.com')
-        setPassword('123456')
-    }}
-    >
-        Get Guest User Credendtials
-    </Button>
+        <FormControl id='password' isRequired>
+          <FormLabel 
+            fontSize="sm" 
+            fontWeight="semibold" 
+            color="gray.700"
+            mb={2}
+          >
+            Password
+          </FormLabel>
+          <InputGroup>
+            <InputLeftElement 
+              pointerEvents='none' 
+              children={<LockIcon color={iconColor} />}
+              h="100%"
+              pl={3}
+            />
+            <Input
+              type={show ? "text" : 'password'}
+              placeholder='Enter your password'
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
+              bg={inputBg}
+              borderColor={borderColor}
+              _hover={{ borderColor: 'blue.400' }}
+              _focus={{
+                borderColor: 'blue.500',
+                boxShadow: '0 0 0 1px #3182ce'
+              }}
+              pl={10}
+              pr={12}
+              h="45px"
+              fontSize="md"
+            />
+            <InputRightElement width='4.5rem' h="100%">
+              <IconButton
+                aria-label={show ? 'Hide password' : 'Show password'}
+                icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                onClick={handleClick}
+                variant="ghost"
+                colorScheme="blue"
+                size="sm"
+                h="80%"
+              />
+            </InputRightElement>
+          </InputGroup>
+        </FormControl>
 
-</VStack>;
+        <VStack spacing={3} w="100%" pt={2}>
+          <Button
+            colorScheme='blue'
+            width="100%"
+            onClick={submitHandler}
+            isLoading={loading}
+            loadingText="Signing in..."
+            size="lg"
+            h="50px"
+            fontSize="md"
+            fontWeight="semibold"
+            bgGradient="linear(to-r, blue.400, blue.600)"
+            _hover={{
+              bgGradient: 'linear(to-r, blue.500, blue.700)',
+              transform: 'translateY(-1px)',
+              boxShadow: 'lg'
+            }}
+            _active={{
+              transform: 'translateY(0)'
+            }}
+            transition="all 0.2s"
+          >
+            Sign In
+          </Button>
+
+          <Divider borderColor={borderColor} />
+
+          <Button
+            variant='outline'
+            colorScheme='gray'
+            width="100%"
+            onClick={()=>{
+              setEmail('guest@example.com')
+              setPassword('123456')
+            }}
+            size="md"
+            h="45px"
+            fontSize="sm"
+            borderColor={borderColor}
+            _hover={{
+              bg: 'gray.50',
+              borderColor: 'gray.400'
+            }}
+          >
+            Get Guest User Credentials
+          </Button>
+        </VStack>
+      </VStack>
+    </Box>
+   );
 }
 
 export default Login
